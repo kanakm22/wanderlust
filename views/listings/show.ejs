@@ -1,4 +1,9 @@
 <% layout("/layouts/boilerplate") %>
+<script>
+    const mapToken = "<%=process.env.MAP_TOKEN %>";
+    const listing = <%- JSON.stringify(listing) %>;
+    
+</script>
 
 
     <div class="row">
@@ -53,7 +58,7 @@
                             <div class="mb-3 mt-3">
                                 <label for="rating" class="form-label">Rating </label>
                                 <fieldset class="starability-slot">
-                                    
+
 
                                     <input type="radio" id="no-rate" class="input-no-rate" name="review[rating]"
                                         value="1" checked aria-label="No rating." />
@@ -81,35 +86,47 @@
                         </form>
                         <% } %>
 
-                            <h4> <b>All Reviews</b></h4>
-                            <div class="row">
-                                <% for(review of listing.reviews) {%>
+                            <% if(listing.reviews.length>0){%>
+                                <div class="row">
+                                    <b>All Reviews</b>
+                                    <% for(review of listing.reviews) {%>
 
-                                    <div class="card col-5 ms-3 mb-3">
-                                        <div class="card-body">
-                                            <h5 class="card-title">@<%= review.author.username %>
-                                            </h5>
+                                        <div class="card col-5 ms-3 mb-3">
+                                            <div class="card-body">
+                                                <h5 class="card-title">@<%= review.author.username %>
+                                                </h5>
 
-                                            <p class="starability-result card-text" data-rating="<%= review.rating%>">
-                                            </p>
+                                                <p class="starability-result card-text"
+                                                    data-rating="<%= review.rating%>">
+                                                </p>
 
-                                            <p class="card-text">
-                                                <%= review.comment %>
-                                            </p>
-                                            <p class="card-text">
-                                                <%= review.rating%> stars
-                                            </p>
+                                                <p class="card-text">
+                                                    <%= review.comment %>
+                                                </p>
+                                                <p class="card-text">
+                                                    <%= review.rating%> stars
+                                                </p>
 
 
+                                            </div>
+                                            <form
+                                                action="/listings/<%=listing._id%>/reviews/<%=review._id%>?_method=DELETE"
+                                                class="mb-3" method="POST">
+                                                <button class="btn btn-dark btn-sm">Delete</button>
+                                            </form>
                                         </div>
-                                        <form action="/listings/<%=listing._id%>/reviews/<%=review._id%>?_method=DELETE"
-                                            class="mb-3" method="POST">
-                                            <button class="btn btn-dark btn-sm">Delete</button>
-                                        </form>
-                                    </div>
-                                    <%}%>
-                            </div>
-
+                                        <%}%>
+                                </div>
+                                <%}%>
 
                 </div>
+                <div class="col-6 offset-3 mb-3">
+                    <h3>Where You'll be</h3>
+                    <div class="map" id="map" ></div>
+                </div>
     </div>
+
+    <script src="/js/map.js"></script>
+
+
+    
